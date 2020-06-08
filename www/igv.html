@@ -1,43 +1,128 @@
-<div id="myDiv" style="padding-top: 50px;padding-bottom: 20px; height: auto">
+<div id="myDiv" style="padding-top: 50px;padding-bottom: 20px; height: auto; width: auto">
 </div>
 
 <script type="module">
 
     document.addEventListener("DOMContentLoaded", function () {
+   
         var div = document.getElementById("myDiv");
         var options = {
-            locus: "",
             reference: {
                       id: "ce11",
                       fastaURL: "//storage.googleapis.com/elegansvariation.org/browser_tracks/c_elegans.PRJNA13758.WS245.genomic.fa",
                     },
+            locus: "I:12,995,803-13,012,859",
+            showNavigation: true,
+            showKaryo: false,
             tracks: [
                 {
-                    name: 'PATC score',
-                    url: 'https://de.cyverse.org/dl/d/20AE6570-ABA5-458A-93AE-27DA434FB058/PATC_scores_ce11.bw',
+                    type: "annotation",
+                    name: "PATC",
+                    url: "//s3.eu-central-1.amazonaws.com/wormbuilder.dev/tracks/patc/PATC_ChoppedDensity_ce11.bed",
                     indexed: false,
+                    labelAllFeatures: true,
+		    displayMode: "EXPANDED",
+            expandedRowHeight: 100,
+            height: 100,
+            featureHeight: 100,
                     searchable: false
                 },
                 {
                     name: "Genes",
-                    displayMode: "COLLAPSED",
-                    order: 1,
-                    url: "https://de.cyverse.org/dl/d/2359571A-75D5-40A6-BACC-458390FD60D7/Longest_gene-form_WS258.bed",
+                    displayMode: "EXPANDED",
+                    url: "//s3.eu-central-1.amazonaws.com/wormbuilder.dev/tracks/patc/Celegans_LongGene.bed",
                     indexed: false,
                     searchable: true,
-                    color: "#5c5cd6"
+                    labelAllFeatures: true,
+                    color: "#2844f7"
                 },
                 {
                   name: "Transcripts",
-                  url: "//storage.googleapis.com/elegansvariation.org/browser_tracks/elegans_transcript_WS258.bed",
-                  color: "#a366ff",
+                  url: "//s3.eu-central-1.amazonaws.com/wormbuilder.dev/tracks/patc/Celegans_WBtranscripts.bed",
+                  color: "#8895e9",
                   displayMode: "SQUISHED",
+                  labelAllFeatures: true,
                   searchable: true  
                 }
             ]
         };
 
-        igv.createBrowser(div, options).then(function (browser) {});
+        igv.createBrowser(div, options).then(function (browser) {
 
-    })
+            browser.on('trackclick', function (track, popoverData) {
+
+            var markup = "<table class=\"igv-popover-table\">";
+
+                        // Don't show a pop-over when there's no data.
+                        if (!popoverData || !popoverData.length) {
+                            return false;
+                        }
+
+                        popoverData.forEach(function (nameValue) {
+                            if (nameValue.name) {
+                                if(nameValue.name.toLowerCase() == 'score'){
+
+                                }else{
+
+if (nameValue.name) {
+                                if(nameValue.name.toLowerCase() == 'name'){
+
+                                }else{
+                                    if (nameValue.name) {
+                                if(nameValue.name.toLowerCase() == 'strand'){
+
+                                }else{
+                                    if (nameValue.name) {
+                                if(nameValue.name.toLowerCase() == 'cdstart'){
+
+                                }else{
+                                    if (nameValue.name) {
+                                if(nameValue.name.toLowerCase() == 'cdend'){
+
+                                }else{
+                                    if(nameValue.name.toLowerCase() == 'patcdensity'){
+                                        var value = parseInt(nameValue.value); 
+
+                                        markup += "<tr><td class=\"igv-popover-td\">"
+                                        + "<div class=\"igv-popover-name-value\">"
+                                        + "<span class=\"igv-popover-name\">" + nameValue.name + "</span>"
+                                        + "<span class=\"igv-popover-value\">" + value + "</span>"
+                                        + "</div>" + "</td></tr>";
+
+                                }else{
+
+                                markup += "<tr><td class=\"igv-popover-td\">"
+                                        + "<div class=\"igv-popover-name-value\">"
+                                        + "<span class=\"igv-popover-name\">" + nameValue.name + "</span>"
+                                        + "<span class=\"igv-popover-value\">" + nameValue.value + "</span>"
+                                        + "</div>" + "</td></tr>";
+                                    }
+}
+}
+}
+}
+}
+}
+}
+}
+}
+}
+                            else {
+                                // not a name/value pair
+                                markup += "<tr><td>" + nameValue.toString() + "</td></tr>";
+                            }
+                        });
+
+                        markup += "</table>";
+
+                        // By returning a string from the trackclick handler we're asking IGV to use our custom HTML in its pop-over.
+                        return markup;
+
+                        });
+
+
+        });
+	})
+
+        
 </script>

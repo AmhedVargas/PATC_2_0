@@ -19,7 +19,6 @@ library(ggvis)
 library(ggplot2)
 library(DT)
 library(shinyWidgets)
-library(Biostrings)
 library(Cairo)
 
 
@@ -83,8 +82,6 @@ shinyUI(
                      });
                                  "),
     navbarPage(
-        #title=HTML("<a href=\"https://wormbuilder.dev/PATC/\">PATCs app</a>"),
-      #title=HTML("<a href=\"#\">PATCs app</a>"),
       title=actionLink("link_to_tabpanel_title", HTML("<b>PATC app</b>")),
       windowTitle="PATCs app",
       ###Theme of shiny
@@ -187,79 +184,6 @@ shinyUI(
                                )
                            )
                  )),
-#conditionalPanel(condition="isBusy == true",
-#                            tags$div("Loading...",id="loadmessage")),
- 
-
-        tabPanel("Gene builder",
-                 mainPanel(
-                     HTML("<h1>Build worm transgenes</h1>"), ###introduction
-                     fluidRow(
-                       column(8,
-                     textAreaInput("seqDNA", label = HTML("<h3>Paste coding sequence</h3><h5>(Max 10 kb sequence with start/stop codons)</h5>"), value = "", cols= 100, rows=5, width = "600px")
-                       )),
-                     selectInput("selectCAI", label = HTML("<b>Codon usage
-                                                           [<a href=\"\" onclick=\"$('#explain_codon').toggle(); return false;\">info</a>]
-                                                           </b>"), 
-                                 choices = list("Ubiquitous" = 1, "Germline" = 2, "Neuronal" = 3, "Somatic" = 4,"Max. expression (CAI = 1)" = 5), 
-                                 selected = 1),
-                     HTML("<p align=\"justify\"><div class=\"explain\" style=\"display: none\" id=\"explain_codon\">
-                        Choose a codon table for transgene optimization.<br> 
-Tissue-specific codon frequencies are calculated from the highest expressed genes identified by <a href=\"https://doi.org/10.1101/2020.02.20.958579\">Serizay <i>et al.</i> (2020)</a> (<a href=\"https://www.ahringerlab.com\">Ahringer lab</a>).<br>
-Max expression is calculated based on <a href=\"http://www.nature.com/nmeth/journal/v8/n3/full/nmeth.1565.html\">Redemann <i>et al.</i> (2011)</a> and <a href=\"https://worm.mpi-cbg.de/codons/cgi-bin/optimize.py\"><i>C. elegans</i> Codon Adapter</a>.<br> 
-<b>Note, all tissue-specific codons are randomly sampled, and the optimized sequences are therefore not unique.</b>
-                    </div></p>"),
-                     
-                     checkboxInput("checkboxRibo", label = HTML("<b>Optimize ribosomal binding 
-                                                                [<a href=\"\" onclick=\"$('#explain_ribo').toggle(); return false;\">info</a>]</b>"), value = FALSE),
-                     HTML("<p align=\"justify\"><div class=\"explain\" style=\"display: none\" id=\"explain_ribo\">
-                        This option calculates and minimizes the folding energy of positions -4 to +39 to optimize ribosome binding.<br> 
-<b>Note, this option adds four leading a's as a consensus start site (aaaaATG).</b>
-                    </div></p>"),
-                     fluidRow(
-                       column(8,
-                     checkboxInput("checkPirna", label = HTML("<b>Minimize <i>C. elegans</i> piRNA homology
-                                                              [<a href=\"\" onclick=\"$('#explain_piRNA').toggle(); return false;\">info</a>]
-                                                              </b>"), value = FALSE, width='100%')
-                     )),
-                     HTML("<p align=\"justify\"><div class=\"explain\" style=\"display: none\" id=\"explain_piRNA\">
-                        This option minimizes the transgene sequence homology to piRNAs (type I and type II), which can improve germline expression.<br>Checking this option ensures that no piRNA has less than five mismatches to the optimized transgene. For more information and refined piRNA optimization, please see <a href=\"https://academic.oup.com/nar/article/46/W1/W43/4979435\">Wu et al. (2018)</a> and the online tool <a href=\"http://cosbi4.ee.ncku.edu.tw/pirScan/\">pirScan</a>.<br>
-<b>Note, this option is computationally demanding, and the algorithm takes approximately four minutes per kilobase to complete under average server load.</b>
-                    </div></p>"),
-                     HTML("<b>Avoid common Golden Gate assembly restriction sites:</b>"),
-                     fluidRow(
-                       column(2,
-                     checkboxInput("checkBsaI", label = HTML("BsaI"), value = FALSE)),
-                     column(2,
-                            checkboxInput("checkEsp", label = HTML("Esp3I/BsmBI"), value = FALSE)),
-                     column(2,
-                     checkboxInput("checkSapI", label = HTML("SapI"), value = FALSE))
-                     ),
-                     fluidRow(
-                       column(8,
-                     checkboxInput("checkIntron", label = HTML("<b>Add three introns
-                                                               [<a href=\"\" onclick=\"$('#explain_introns').toggle(); return false;\">info</a>]
-                                                               </b>"), value = FALSE, width='100%'),
-                     conditionalPanel(condition = "input.checkIntron==1",
-                                      radioButtons("intropt", label = HTML(""),
-                                                   choices = list("Synthetic, Golden Gate compatible (BsaI, 51 bp, 33% GC)" = 1, 
-                                                                  "rps-0 (55 bp, 15% GC)" = 2, 
-                                                                  "rps-5 (65 bp, 22% GC)" = 3,
-                                                                  "rps-20 (62 bp, 28% GC)" = 4
-                                                                  ), 
-                                                   selected = 1, width='100%')))),
-                     HTML("<p align=\"justify\"><div class=\"explain\" style=\"display: none\" id=\"explain_introns\">
-                        Adding introns can improve transgene expression <a href=\"https://pubmed.ncbi.nlm.nih.gov/8244003/\">Okkema <i>et al.</i> (1993)</a>. Introns are indicated by lower-case letters and are inserted at splice consensus sites (AG|R) (<a href=\"https://www.ncbi.nlm.nih.gov/books/NBK20075/\"><i>C. elegans</i> II, 2. ed</a>).<br>
-For the germline, PATC-rich introns improve expression for single-copy insertions (<a href=\"https://www.sciencedirect.com/science/article/pii/S0092867416306766\">Frøkjær-Jensen <i>et al.</i> 2016</a>) and from extra-chromosomal arrays (Al Johani <i>et al.</i> 2020, <i>in preparation</i>).<br>
-We find that placing introns near the 5' end of genes, in particular within the first 150 basepairs, is most efficient for stimulating expression (el Mouridi & Frøkjær-Jensen, unpublished observations).
-                    </div></p>"),
-                     actionButton("actionSeq", label = "Submit"),
-                     verbatimTextOutput("ErrorMessage"),
-                     hr(),
-                     verbatimTextOutput("PartialResult"),
-                     uiOutput("downloadoptseq")
-                 )),
-        
                 ####Interactive panel
         tabPanel("Interactive",
                  mainPanel(
@@ -287,17 +211,10 @@ We find that placing introns near the 5' end of genes, in particular within the 
                  ),
         ####Genome browse
         tabPanel("Genome Browser",
-                 #mainPanel(
                      HTML("<h1>PATC signal across the <i>C. elegans</i> genome<br></h1> "),
                      h4(""),
                      tags$head(tags$script(src ="igv.min_all-features.js")),
-                     #includeScript("https://cdn.jsdelivr.net/npm/igv@2.5.5/dist/igv.min.js"),
-                     #tags$head(tags$script(src ="https://cdn.jsdelivr.net/npm/igv@2.3.5/dist/igv.js")),
-		#includeScript("https://igv.org/web/release/2.3.5/dist/igv.js"),
-                     includeHTML("PATC/igv.html")
-                     
-
-                 #)
+                     includeHTML("www/igv.html")
         ),
         
         
@@ -396,7 +313,7 @@ We find that placing introns near the 5' end of genes, in particular within the 
         )
     ),
     hr(),
-    HTML("<a href=\"https://syngenbio.kaust.edu.sa\">Syntetic genome biology laboratory @KAUST</a><br>"),
+    HTML("<a href=\"https://syngenbio.kaust.edu.sa\">Syntetic genome biology laboratory</a> @ <a href=\"https://kaust.edu.sa/en\"> KAUST</a><br>"),
     HTML("<a href=\"http://www.wormbuilder.org/\">Wormbuilder</a><br>"),
     HTML("<a href=\"mailto:amhed.velazquez@kaust.edu.sa\">Contact us!</a>")
     
