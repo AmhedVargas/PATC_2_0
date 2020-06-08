@@ -107,7 +107,3 @@ All the templates, libraries, and programs used to produce this site are under t
 ## The PATC algorithm
 Andrew Fire et al. (2006) developed the original PATC algorithm. This server uses a modified "balanced" PATC algorithm (Frøkjær-Jensen et al., 2016). This app acts only as a front-end for the PATC algorihtm which runs in the background. For a proper description of how it works, see Fire et al. 2006 paper.
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 50c763a6aa5fc275d4dbb685f4695a18868e27a9
