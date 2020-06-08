@@ -1,0 +1,112 @@
+Description: "Phasing metrics for 'MyGenome.fa'"
+Date: "2019"
+Time: "12:00AM"
+Sequence: file.fasta
+Sequence File Format: 
+Sequence File Format: 
+Analysis Program Version: PATCV
+Threshold limit for phasing call:  6.0000000000000000E+001
+Random Character: 0
+Scrambler (AA/TT <-> AT/TA switch): (Scrambled=-1, Normal=1)1
+Bin Size (-1 for "feature-by-feature"): 1000000
+Number of iterations ahead the program will look for optimizing bend element: 3
+Four AA/TT Bond Value: 30
+Three AA/TT Bond Value: 20
+Two AA/TT Bond Value: 10
+9 Base Helical Cost: 16
+10 Base Helical Cost: 8
+11 Base Helical Cost: 16
+12 Base Helical Cost: 32
+Sequence Window Size: 1200
+
+Output Data Structure (tab delimited fields)
+ 1: Common name for gene (or "NoCommonName")
+ 2: SubSequence Name)
+ 3: IntronF-Fraction of phased bases in intron areas
+ 4: ExonF-Fraction of phased bases in exon areas
+ 5: FiveF-Fraction of phased bases in 5-prime areas
+ 6: ThreeF-Fraction of phased bases in 3-prime areas
+ 7: IntronD-Average Phasing Score in intron areas
+ 8: ExonD-Average Phasing Score in exon areas
+ 9: FiveD-Average Phasing Score in 5-prime areas
+ 10: ThreeD-Average Phasing Score in 3-prime areas
+ 11: IntronB-Phased Bases in Introns
+ 12: ExonB-Phased Bases in Exons
+ 13: FiveB-Phased Bases in 5-prime
+ 14: ThreeB-Phased Bases in 3-prime
+ 15: IntronN-Total Bases in Introns
+ 16: ExonN-Total Bases in Exons
+ 17: FiveN-Total Bases in 5-prime
+ 18: ThreeN-Total Bases in 3-prime
+ 19: IntronP-Raw Sum of all raw Phasing Scores in Introns
+ 20: ExonP
+ 21: FiveP
+ 22: ThreeP
+ 23: IntronAF-Fraction of phased bases in Introns; First 200 nt from ATG
+ 24: ExonAF
+ 25: FiveAF
+ 26: ThreeAF
+ 27: IntronAD
+ 28: ExonAD
+ 29: FiveAD
+ 30: ThreeAD
+ 31: IntronAB
+ 32: ExonAB
+ 33: FiveAB
+ 34: ThreeAB
+ 35: IntronAN
+ 36: ExonAN
+ 37: FiveAN
+ 38: ThreeAN
+ 39: IntronAP
+ 40: ExonAP
+ 41: FiveAP
+ 42: ThreeAP
+ 43: SubSequence Number)
+ 44: Bin Number)
+ 45: Bin Type)
+ 46: Bin Size)
+ 47: Bin Start in Sub-sequence)
+ 48: Bin Start in Whole sequence)
+ 49: G bases)
+ 50: A bases)
+ 51: T bases)
+ 52: C bases)
+ 53: N bases)
+ 54: X bases)
+ 55: - bases)
+ 56: AA or TT di-bases)
+ 57: AT or TA di-bases)
+ 58: Orientation of feature [+: same direction as sequence file, -: reversed]
+ 59: Bases with phasing prediction > Threshold
+ 60: Phasing Frequency
+ 61: Total Value of Phasing Predictions for Bin
+ 62: Phasing "Density"
+ 63: cub= all capitalized bases
+ 64: cup= phased capitalized bases
+ 65: cuu= unphased capitailized bases
+ 66: nub= all non-capitalized bases
+ 67: nup= phased non-capitalized bases
+ 68: nuu= unphased non-capitailized bases
+ 69: adb=all determined bases (non-N) in bin
+ 70: rb= all "x" bases in bin
+ 71: upsF-Fraction of phased bases in ups areas
+ 72: dwnF-Fraction of phased bases in dwn areas
+ 73: upsD-Average Phasing Score in ups areas
+ 74: dwnD-Average Phasing Score in dwn areas
+ 75: upsB-Phased Bases in upss
+ 76: dwnB-Phased Bases in dwns
+ 77: upsN-Total Bases in upss
+ 78: dwnN-Total Bases in dwns
+ 79: upsP-Raw Sum of all raw Phasing Scores in upss
+ 80: dwnP
+ 81: External Index (position in genome)
+
+Following are the Subsequences read and evaluated by the program
+
+SequenceName	FiveF	ExonF	IntronF	ThreeF	UpsF	DwnF
+smu-1_CC4.3.1_Unspliced_+_UTR_(8532bp)	0.3488	0.0848	0.0000	0.5451	0.0000	0.0000
+Whole Sequence Statistics (file.fasta) Bases: 8532 / Phased: 3928 / Frequency:  4.6038443506797938E-001
+ / Density:  7.8382559774964832E+001
+******************
+"PATCV" Source Code Follows if Available... not available in FPC: 

@@ -1,0 +1,43 @@
+<div id="myDiv" style="padding-top: 50px;padding-bottom: 20px; height: auto">
+</div>
+
+<script type="module">
+
+    document.addEventListener("DOMContentLoaded", function () {
+        var div = document.getElementById("myDiv");
+        var options = {
+            locus: "",
+            reference: {
+                      id: "ce11",
+                      fastaURL: "//storage.googleapis.com/elegansvariation.org/browser_tracks/c_elegans.PRJNA13758.WS245.genomic.fa",
+                    },
+            tracks: [
+                {
+                    name: 'PATC score',
+                    url: 'https://de.cyverse.org/dl/d/20AE6570-ABA5-458A-93AE-27DA434FB058/PATC_scores_ce11.bw',
+                    indexed: false,
+                    searchable: false
+                },
+                {
+                    name: "Genes",
+                    displayMode: "COLLAPSED",
+                    order: 1,
+                    url: "https://de.cyverse.org/dl/d/2359571A-75D5-40A6-BACC-458390FD60D7/Longest_gene-form_WS258.bed",
+                    indexed: false,
+                    searchable: true,
+                    color: "#5c5cd6"
+                },
+                {
+                  name: "Transcripts",
+                  url: "//storage.googleapis.com/elegansvariation.org/browser_tracks/elegans_transcript_WS258.bed",
+                  color: "#a366ff",
+                  displayMode: "SQUISHED",
+                  searchable: true  
+                }
+            ]
+        };
+
+        igv.createBrowser(div, options).then(function (browser) {});
+
+    })
+</script>
