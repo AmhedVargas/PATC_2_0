@@ -30,7 +30,7 @@ Additionally, the PATC app show a genome browser that relies on a custom modifie
 **root**
 *   server.R
 *   ui.R
-*   **www**
+*   **www** `Folder containing web sources accesible to the shiny app`
 *   *   elegans3.gif `Small gif that is displayed while the server is busy`
 *   *   igv.html `HTML script that calls and defines tracks for the genome browser. Please modify if different tracks are needed`
 *   *   igv.min_all-features.js `Javascript modified for adhoc display of labelings. For specific igv pop-overs, the igv.html file was modified instead`
