@@ -1,4 +1,4 @@
-########PATC-v server####
+########PATC server####
 ###Amhed Vargas
 ###amhed.velazquez@kaust.edu.sa
 ###Server
@@ -10,7 +10,8 @@
 #install.packages("ggplot2")
 #install.packages("DT")
 #install.packages("shinyWidgets")
-#install.packages
+#install.packages("Cairo")
+#install.packages("Biostrings")
 
 #Load libraries
 library(shiny)
@@ -33,9 +34,8 @@ library(Biostrings)
     options(shiny.maxRequestSize=300*1024^2) ###Limits max upload to 300 Megabytes. #Copy and paste 50Kb limit comes from default html maxlength parameter (Default value is 524288)
 
 
-    #####Data##########################
+    #####Read data for functions##########################
         ###Data explorer
-    ###Format input table
         ChrisPAT=read.table("PATC/PATCsGenesChristianData.tsv",sep="\t", header= TRUE)
         rownames(ChrisPAT)=as.character(ChrisPAT[,2])
         ##Assign Yes, No, unknown insted of TRUE, FALSE, NA
@@ -43,25 +43,9 @@ library(Biostrings)
         ChrisPAT$GermlineExpression[which(ChrisPAT$GermlineExpression == TRUE)] <- "Yes"
         ChrisPAT$GermlineExpression[which(is.na(ChrisPAT$GermlineExpression))] <- "unknown"
     ###################################################
-        
-        ###Analysis functions
-        
-        ##Function fft
-        higfft=function(x){
-          if(length(x) < 10){return(NULL)}else{
-            spect = spectrum(x, plot = FALSE)
-            
-            period = seq(2, 20, .5)
-            
-            mtm <- spect$spec[unlist(lapply(c(1/(period)), function (freq) {
-              idx <- which.min(abs(freq - spect$freq))
-            }))]
-            
-            return(period[which.max(mtm)])
-          }}
-        
-        ############
-    ##############Exit function############################
+    
+    #####Functions#####################################
+    ###Exit function#
     ###On exit, force the remove of directory
     ##Attention: Interactive sessions create problems because the listening of the server stops in main directory and not in sub directory
     session$onSessionEnded(function(){
@@ -71,7 +55,8 @@ library(Biostrings)
     ################################################################
 
 
-    ###Control panels##########################################################################################
+    ###Control panels functions##########################################################################################
+    ##FUnctions needed to generate links between panels
     observeEvent(input$link_to_tabpanel_interactive, {
     newvalue <- "Interactive"
     updateTabsetPanel(session, "panels", newvalue)
@@ -94,7 +79,7 @@ library(Biostrings)
     #########################################################################################################
 
 
-    ###Gene explorer#######################################################################################
+    ###Gene explorer functions#######################################################################################
     
     ##Hover action in graphic
     gene_tooltip <- function(x) {
@@ -193,17 +178,11 @@ library(Biostrings)
       minpat=quantile(crisp$PATC.density, c(yone), na.rm=TRUE)
       crisp = subset(crisp, PATC.density >= (minpat) & PATC.density <= (maxpat))
       
-      ##Code to test highlighting
-      #if(geneval$id %in% rownames(crisp)){crisp = subset(crisp,Wormbase.ID == geneval$id)}
-      #if(input$genetext %in% rownames(crisp)){crisp = subset(crisp,Wormbase.ID == input$genetext)}
-      #if(input$genetext %in% as.character(crisp$Gene.name)){crisp = subset(crisp,Gene.name == input$genetext)}
-      #if(input$genetext %in% rownames(crisp)){crisp[which(input$genetext == rownames(crisp)),9] = 9000 }
-      #if(input$genetext %in% as.character(crisp$Gene.name)){crisp[which(input$genetext == as.character(crisp$Gene.name)),9] = 9000 }
-      #if(input$genetext %in% rownames(crisp)){crisp$GermlineExpressio[which(input$genetext == rownames(crisp))] <- "unknown" }
-      #if(input$genetext %in% as.character(crisp$Gene.name)){crisp$GermlineExpressio[which(input$genetext == as.character(crisp$Gene.name))] <- "unknown" }
+      ##Highlight data if genee names present
       if(input$genetext %in% rownames(crisp)){crisp[which(input$genetext == rownames(crisp)),7] = "No" }
       if(input$genetext %in% as.character(crisp$Gene.name)){crisp[which(input$genetext == as.character(crisp$Gene.name)),7] = "highlit" }
       
+      ##Return table to plot
       crisp
     })
     
@@ -256,6 +235,24 @@ library(Biostrings)
         return(tt)
     }
 
+    ##########higfft function
+    ##Function to get highest bp periodicity
+        higfft=function(x){
+          ##If A/T clusters appears  less than5 times, do not perform analysis
+          if(length(x) < 5){return(NULL)}else{
+            ##Calculate spectrum based on fft
+            spect = spectrum(x, plot = FALSE)
+            #Create period to analyze
+            period = seq(2, 20, .5)
+            ##Convert spectral signal to frequency by ordering indexes based on 1/period
+            consig = spect$spec[unlist(lapply(c(1/(period)), function (freq) {
+              idx = which.min(abs(freq - spect$freq))
+            }))]
+            ##Return period with highest signal
+            return(period[which.max(consig)])
+          }}
+        
+        ############
    ##################
         ###Fasta input#####################
     ###Observer of submit button in fasta input
@@ -509,7 +506,7 @@ library(Biostrings)
     ###########################################################################################################
     
     
-    ################
+    ################Starting function#############
     
     #On starting, put Smu-1##########
     observeEvent(session$clientData,{init()})
@@ -519,7 +516,7 @@ library(Biostrings)
         sendM(input$panels);
     })
     
-    ##function to send message
+    ##function to send check tab status and change visibility of browser
     sendM = function(x){
       session$sendCustomMessage("igvstat-change", x)
     }

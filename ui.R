@@ -1,4 +1,5 @@
-########PATC-v server####
+########PATC User Interace####
+#Run a long with server.R in an interactive version or deploy shiny server
 ###Amhed Vargas
 ###amhed.velazquez@kaust.edu.sa
 ###UI
@@ -10,7 +11,7 @@
 #install.packages("ggplot2")
 #install.packages("DT")
 #install.packages("shinyWidgets")
-#install.packages("shinyjs")
+#install.packages("Cairo")
 
 #Load libraries
 library(shiny)
@@ -22,7 +23,8 @@ library(shinyWidgets)
 library(Cairo)
 
 
-####ExternalFUnction
+####Busy indicator function based from shinybusy function
+###Its only a wrapper for a javascript timeout/setinterval function
 busyIndicator <- function(text = "Server is worming up... Please wait", wait=2000) {
   shiny::tagList(
     shiny::div(class="coso",id="loadmessage",text,img(src="elegans3.gif"))
@@ -44,10 +46,11 @@ busyIndicator <- function(text = "Server is worming up... Please wait", wait=200
 }
 
 
-# Define User interface
+#########################################
+####Start here: Definition User interface
 shinyUI(
     fluidPage(
-      ###Loading message
+      ###HTML header that describes the object "loadmessage" used in shiny busy indicator.
       tags$head(tags$style(type="text/css", "
              #loadmessage {
                position: fixed;
@@ -63,7 +66,7 @@ shinyUI(
                z-index: 105;
              }
           ")),
-    ##Costum extra styles: single sliders background and title of navbar  
+    ##Costum extra css styles: Remove sliders background and change color of navbar brand (title of page)  
     tags$style(type = 'text/css', 
                ".js-irs-none .irs-single, .js-irs-none .irs-bar-edge, .js-irs-none .irs-bar {
                           background: transparent;
@@ -73,14 +76,15 @@ shinyUI(
                           border-right-color: transparent}
                .navbar-default .navbar-brand:hover {color: #ffffff;}
                "),
-    #Main tab pages
+    #Call busy indicator on top of all tabs.
     busyIndicator(),
-    #Listen for gene-coordinates messages
+    #script to renew igv browser everytime a tab is changed. This solves issue regarding Nan positioning when browser is not in main tab.
     tags$script("
                      Shiny.addCustomMessageHandler('igvstat-change', function(panel) {
                      igv.visibilityChange()
                      });
                                  "),
+    ######Main tab pages coded in a navbarPage######
     navbarPage(
       title=actionLink("link_to_tabpanel_title", HTML("<b>PATC app</b>")),
       windowTitle="PATCs app",
@@ -115,11 +119,8 @@ shinyUI(
                                     h3("Options:"),
                                     #custom slider sliderInput("thres", "Phasing treshold", min = 0, max = 95, value = 55, step = 5),
                                     tags$div(class = "js-irs-none", sliderInput("thres", HTML("Phasing threshold<sup>1</sup>"), value = 60, min = 5, max = 95, step = 5)),
-                                    #numericInput("Bins", "Report PATCs in windows of (bp)", min = 1000, max = 100000, value = 25000), ### Deprecated option
                                     checkboxInput("flabal",HTML("<b>Balanced algorithm<sup>2</sup></b>"), value=TRUE),
                                     checkboxInput("flag_hist",HTML("<b>Analyze PATC periodicity<sup>3</sup></b>"), value=TRUE),
-                                    #actionButton("DemoSeq", label = "Demo"),
-                                    #actionButton("ResetSeq", label = "Reset"),
                                     actionButton("action2", label = "Calculate PATCs")
                              )
                              ),
@@ -146,10 +147,9 @@ shinyUI(
                                         h3("Options:"),
                                         #custom slide
                                         tags$div(class = "js-irs-none", sliderInput("thres", HTML("Phasing threshold<sup>1</sup>"), value = 60, min = 5, max = 95, step = 5)),
-                                        #numericInput("Bins", "Report PATCs in windows of (bp)", min = 1000, max = 100000, value = 25000), ##Deprecated option
                                         checkboxInput("flabal2",HTML("<b>Balanced algorithm<sup>2</sup></b>"), value=TRUE),
                                         checkboxInput("flag_hist2",HTML("<b>Analyze PATC periodicity<sup>3</sup></b>"), value=TRUE),
-                                        ##Download demo
+                                        ##Download demo trhough handler
                                         downloadButton("downloadData", "Demo File"),
                                         actionButton("action1", label = "Calculate PATCs")
                                             )),
@@ -203,13 +203,12 @@ shinyUI(
                                              actionButton("actionsearch", label = "Go!"),
                                              hr(),
                                              htmlOutput("geneid")
-                                             ###Search button in future
                                              ),
                                       column(8, ggvisOutput("plot1"))
                                   )
                          )
                  ),
-        ####Genome browse
+        ####Genome browser tab
         tabPanel("Genome Browser",
                      HTML("<h1>PATC signal across the <i>C. elegans</i> genome<br></h1> "),
                      h4(""),
@@ -266,7 +265,7 @@ shinyUI(
 		
 		
 		
-		###Documentation panel, data 
+		###Software panel: please do update links if any of them are down.
         tabPanel("Software",
                  mainPanel(
                  h1("Download the PATC algorithm"),
@@ -283,7 +282,7 @@ shinyUI(
                       <i>C. elegans</i> ce11/WS245 (Frøkjær-Jensen <i>et al</i>., 2016)</a></h4>")
                  )
                  ),
-        ###About
+        ###About Panel
         tabPanel("About",
                  mainPanel(
                  h3("The app"),
@@ -293,7 +292,7 @@ shinyUI(
                  <br>All the templates, libraries, and programs used to produce this site are under the MIT and GNU licenses.</p>"),
                  h3("The PATC algorithm"),
                  HTML("<p align=\"justify\">
-                      Andrew Fire <i>et al.</i> (2006) developed the original PATC algorithm. This server uses a modified \"balanced\" PATC algorithm (Frøkjær-Jensen <i>et al</i>., 2016). This app acts as a front-end for the actual alogirhtm running in the background.
+                      Andrew Fire <i>et al.</i> (2006) developed the original PATC algorithm. This server uses a modified \"balanced\" PATC algorithm (Frøkjær-Jensen <i>et al</i>., 2016). This app acts as a front-end for the balanced alogirhtm which runs in the background.
                       </p>"),
                  h3("The Laboratory of Synthetic Genome Biology"),
                  HTML("<p align=\"justify\">
@@ -307,7 +306,7 @@ shinyUI(
                  h3("The people behind the app"),
                  HTML("<p align=\"justify\">
                       The app was originally conceived by Christian Frøkjær-Jensen and implemented by <a href=\"https://www.researchgate.net/profile/Amhed_Vargas_Velazquez\">Amhed Missael Vargas Velazquez</a>.
-                      Furthermore, the PATC app is on the web thanks to AWS and the original efforts of the Linux and Advanced Platforms team in KAUST. 
+                      Furthermore, the PATC app is on the web thanks to Amazon Web Services (AWS) and the original efforts of the Linux and Advanced Platforms team in KAUST. 
                       </p>")
         )
         )
