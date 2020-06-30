@@ -72,9 +72,9 @@ Please first make sure to have installed R along with all its dependencies in yo
 
 1. Copy or clone the contents of this git in to a new directory
 
-`git clone https://gitlab.kaust.edu.sa/velazqam/wormbuilder-patc.git`
+`git clone https://github.com/AmhedVargas/PATC_2_0.git`
 
-`cd wormbuilder-patc/`
+`cd PATC_2_0/`
 
 2. Compile Pascal code and move to main PATC directory
 
