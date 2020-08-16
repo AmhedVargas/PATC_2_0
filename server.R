@@ -441,46 +441,21 @@ library(Biostrings)
     #############
     ###Initialize webpage##########################
     init=function(){
-      Demova=readLines("PATC/Demo.fasta")
+      load(file="PATC/init/Initial.RData")
       updateTextAreaInput(session, "text", value = paste(Demova[1],"\n",Demova[2],"\n",sep=""))
       
-      write(paste(Demova[1],"\n",Demova[2],"\n",sep=""),paste("PATC/users/",session_id,"/file.fasta", sep=""))
-      
-      if(input$flabal){ ###Blanced flag
-        balflag="B"}else{balflag="0"
-        }
-      
-      ####New format of sh
-      ##patc.sh directory_id treshold balanced_flag type_flag
-      system(paste("sh PATC/patc.sh",session_id,input$thres, balflag,1)) 
-      
       output$table2 = DT::renderDataTable(DT::datatable({
-        makett()
+        tt
       }, options = list(dom = 't')))
       
       ##External function to include the HTML output
       #It has to be now relocated within temporary directory
-      getPage<-function(dir) {
-        return(includeHTML(paste(paste("PATC/users/",dir,"/DNA-patc.html", sep=""))))
-      }
-      output$inc<-renderUI({getPage(session_id)})
+      output$inc<-renderUI({
+        includeHTML(paste(paste("PATC/init/DNA-patc.html", sep="")))
+        })
       
       ###Add visualization 4 & 5 if checkbox
-      if(input$flag_hist){
-        inseq=readLines(paste("PATC/users/",session_id,"/file.fasta", sep=""))
-        if(length(grep(">",inseq)) > 0) {inseq=inseq[-c(grep(">",inseq))]}
-        
-        inseq=paste(inseq,collapse="")
-        
-        bseq=DNAString(gsub(pattern="\n",replacement="",x=toupper(inseq)))
-        
-        dists=dist(start(matchPattern("WWWW",bseq, fixed=FALSE)))
-        vals=table(dists)
-        freqAT= as.integer(vals)
-        xas=as.integer(names(vals))
-        freqPAT = data.frame(BPseparation=xas[-c(1:5)], Ocurrences=freqAT[-c(1:5)])
-        
-        valu=higfft(vals)
+      if(input$flag_hist){        
         if(!is.null(valu)){output$computedfft <- renderUI({ HTML(paste0("Highest periodicity signal found at ","<b>",valu,"bp </b>",sep=""))})}
         
         output$plot2 <- renderPlot({
