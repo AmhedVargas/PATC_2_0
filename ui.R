@@ -50,6 +50,9 @@ busyIndicator <- function(text = "Server is worming up... Please wait", wait=200
 ####Start here: Definition User interface
 shinyUI(
     fluidPage(
+      tags$head(
+        tags$link(rel="stylesheet",type = "text/css", href="bootstrap.min.css")
+      ),
       ###HTML header that describes the object "loadmessage" used in shiny busy indicator.
       tags$head(tags$style(type="text/css", "
              #loadmessage {
@@ -74,7 +77,6 @@ shinyUI(
                           border-bottom-color: transparent;
                           border-left-color: transparent;
                           border-right-color: transparent}
-               .navbar-default .navbar-brand:hover {color: #ffffff;}
                "),
     #Call busy indicator on top of all tabs.
     busyIndicator(),
@@ -89,7 +91,7 @@ shinyUI(
       title=actionLink("link_to_tabpanel_title", HTML("<b>PATC app</b>")),
       windowTitle="PATCs app",
       ###Theme of shiny
-        theme = shinytheme("flatly"),
+        #theme = shinytheme("flatly"),
         id = "panels",
         
         ###Analysis panel
