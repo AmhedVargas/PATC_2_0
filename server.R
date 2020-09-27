@@ -36,7 +36,7 @@ library(Biostrings)
 
     #####Read data for functions##########################
         ###Data explorer
-        ChrisPAT=read.table("PATC/PATCsGenesChristianData.tsv",sep="\t", header= TRUE)
+        ChrisPAT=read.table("PATC/PATC_WS278_data.tsv",sep="\t", header= TRUE)
         rownames(ChrisPAT)=as.character(ChrisPAT[,2])
         ##Assign Yes, No, unknown insted of TRUE, FALSE, NA
         ChrisPAT$GermlineExpression[which(!(ChrisPAT$GermlineExpression))] <- "No"
@@ -115,19 +115,24 @@ library(Biostrings)
       
       gene <- ChrisPAT[as.character(gidi),]
       
+      ##Focus on selected gene
+      updateSelectInput(session, 'chromo',selected = as.character(gene$Chromosome))
+      updateSliderInput(session, 'cpos',value = c(gene$Relative.loc.chromosome*100 - 5 , gene$Relative.loc.chromosome*100 + 5))
+      updateSliderInput(session, 'papos',value = c(0, 100))
+      
       paste0("<b>Gene: ", gene$Gene.name, "</b><br>Wormbase ID: ",
              "<a href=\"https://www.wormbase.org/species/c_elegans/gene/", gene$Wormbase.ID,"\">", gene$Wormbase.ID, "</a><br>",
              "Transcript analyzed: ", gene$Transcript.name, "<br>",
              "Chromosome: ", gene$Chromosome, "<br>",
-             "Relative position: ", gene$Relative.loc.chromosome, "<br>",
+             "Relative position: ", round(gene$Relative.loc.chromosome,2), "<br>",
              "Gene size: ", gene$Bin.size, "<br>",
-             "Number of phased bases: ", gene$Bases.with.PATC.55, "<br>",
-             "Phased bases in gene: ", as.integer(gene$Frequency.of.PATCs.55 * 100), "%<br>",
+             "Number of phased bases: ", gene$Bases.with.PATC.60, "<br>",
+             "Phased bases in gene: ", as.integer(gene$Frequency.of.PATCs.60 * 100), "%<br>",
              "Total PATC score: ", gene$Total.value.of.PATC.algorithm, "<br>",
-             "PATC density: ", gene$PATC.density, "<br>",
+             "PATC density: ", round(gene$PATC.density,2), "<br>",
              "Germline expression: ", gene$GermlineExpression, "<sup>1</sup><br>",
-             "RPKM Oocyte expression<sup>2</sup>: ", gene$stoekius_oocyte_rpkm, "<br>",
-             "RPKM Sperm expression<sup>3</sup>: ", gene$spermatogenic_gonad_fem.3_RPKM_Ortiz_2014,"<br>","<br>",
+             "RPKM Oocyte expression<sup>2</sup>: ", round(gene$stoekius_oocyte_rpkm,2), "<br>",
+             "RPKM Sperm expression<sup>3</sup>: ", round(gene$spermatogenic_gonad_fem.3_RPKM_Ortiz_2014,2),"<br>","<br>",
              "<p align=\"justify\">",
              "<font size=\"2\">",
              "<sup>1</sup>: Oocyte Reads Per Kilobase of transcript per Million mapped reads (RPKM) > 2<br>",
@@ -142,7 +147,9 @@ library(Biostrings)
     
     ##Observers for action button search
     observeEvent(input$actionsearch, {
-      mygene =input$genetext
+      #remove spaces
+      mygene =gsub(" ", "",input$genetext,fixed = TRUE)
+      
       output$geneid <- renderUI({
         HTML(
         geneinfo(mygene)
@@ -179,7 +186,7 @@ library(Biostrings)
       crisp = subset(crisp, PATC.density >= (minpat) & PATC.density <= (maxpat))
       
       ##Highlight data if genee names present
-      if(input$genetext %in% rownames(crisp)){crisp[which(input$genetext == rownames(crisp)),7] = "No" }
+      if(input$genetext %in% rownames(crisp)){crisp[which(input$genetext == rownames(crisp)),7] = "highlit" }
       if(input$genetext %in% as.character(crisp$Gene.name)){crisp[which(input$genetext == as.character(crisp$Gene.name)),7] = "highlit" }
       
       ##Return table to plot
@@ -358,7 +365,7 @@ library(Biostrings)
       #write(">DNA_input",paste("PATC/users/",session_id,"/file.fasta", sep=""))
       #write(input$text,paste("PATC/users/",session_id,"/file.fasta", sep=""),append= TRUE)
       
-      write(input$text,paste("PATC/users/",session_id,"/file.fasta", sep=""))
+      write(gsub(",", "",input$text,fixed = TRUE),paste("PATC/users/",session_id,"/file.fasta", sep=""))
       
       if(input$flabal){ ###Blanced flag
         balflag="B"}else{balflag="0"

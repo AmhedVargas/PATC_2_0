@@ -201,7 +201,7 @@ shinyUI(
                                              sliderInput("cpos", "Relative position in chromosome (%)",0, 100, c(0, 100), step = 1),
                                              sliderInput("papos", "Display top genes ranked by PATC content (%)",0, 100, c(0, 100), step = 1),
                                              checkboxInput("flascal","Log scale Y axis", value=FALSE),
-                                             textAreaInput("genetext", label = "Gene search", value = "", placeholder= "Wormbase ID or common name"),
+                                             textAreaInput("genetext", label = "Gene search", value = "", placeholder= "Wormbase ID or common name",resize="none",rows=1),
                                              actionButton("actionsearch", label = "Go!"),
                                              hr(),
                                              htmlOutput("geneid")
@@ -271,16 +271,21 @@ shinyUI(
         tabPanel("Software",
                  mainPanel(
                  h1("Download the PATC algorithm"),
-                 HTML("If required, use \"worm\" as password."),
+                 #HTML("If required, use \"worm\" as password."),
                  h3("Software"),
-                 HTML("<h4><a href=\"https://exrcsdrive.kaust.edu.sa/exrcsdrive/index.php/s/COn5idUy2PgUnSp\">PATC 2006 for mac</a></h4>"),
-                 HTML("<h4><a href=\"https://exrcsdrive.kaust.edu.sa/exrcsdrive/index.php/s/2Hq0PNjmcAVajQZ\">PATC 2006 for linux</a></h4>"),
-                 HTML("<h4><a href=\"https://exrcsdrive.kaust.edu.sa/exrcsdrive/index.php/s/SCfVrGqhjKRyXi0\">PATC 2016 for mac (balanced option)</a></h4>"),
-                 HTML("<h4><a href=\"https://exrcsdrive.kaust.edu.sa/exrcsdrive/index.php/s/dfoNulv57Luu1kA\">PATC 2016 for linux (balanced option)</a></h4>"),
-                 HTML("<h4><a href=\"https://exrcsdrive.kaust.edu.sa/exrcsdrive/index.php/s/dFODDwTEPrKdEJq\">PATC Source files</a></h4>"),
+                 #HTML("<h4><a href=\"https://exrcsdrive.kaust.edu.sa/exrcsdrive/index.php/s/COn5idUy2PgUnSp\">PATC 2006 for mac</a></h4>"),
+                 #HTML("<h4><a href=\"https://exrcsdrive.kaust.edu.sa/exrcsdrive/index.php/s/2Hq0PNjmcAVajQZ\">PATC 2006 for linux</a></h4>"),
+                 #HTML("<h4><a href=\"https://exrcsdrive.kaust.edu.sa/exrcsdrive/index.php/s/SCfVrGqhjKRyXi0\">PATC 2016 for mac (balanced option)</a></h4>"),
+                 #HTML("<h4><a href=\"https://exrcsdrive.kaust.edu.sa/exrcsdrive/index.php/s/dfoNulv57Luu1kA\">PATC 2016 for linux (balanced option)</a></h4>"),
+                 #HTML("<h4><a href=\"https://exrcsdrive.kaust.edu.sa/exrcsdrive/index.php/s/dFODDwTEPrKdEJq\">PATC Source files</a></h4>"),
+                 HTML("<h4><a href=\"https://s3.eu-central-1.amazonaws.com/wormbuilder.dev/Downloads/PATC/For_mac_2014.zip\">PATC 2006 for mac</a></h4>"),
+                 HTML("<h4><a href=\"https://s3.eu-central-1.amazonaws.com/wormbuilder.dev/Downloads/PATC/For_linux_2014.zip\">PATC 2006 for linux</a></h4>"),
+                 HTML("<h4><a href=\"https://s3.eu-central-1.amazonaws.com/wormbuilder.dev/Downloads/PATC/For_mac_2015.zip\">PATC 2016 for mac (balanced option)</a></h4>"),
+                 HTML("<h4><a href=\"https://s3.eu-central-1.amazonaws.com/wormbuilder.dev/Downloads/PATC/For_linux_2015.zip\">PATC 2016 for linux (balanced option)</a></h4>"),
+                 HTML("<h4><a href=\"https://s3.eu-central-1.amazonaws.com/wormbuilder.dev/Downloads/PATC/SourceCode.zip\">PATC Source files</a></h4>"),
                  h3("Data Files"),
-                 HTML("<h4><a href=\"https://exrcsdrive.kaust.edu.sa/exrcsdrive/index.php/s/Nc2CTOAk96xO0zi\">PATC algorithm documentation (Fire <i>et al</i>., 2006)</a></h4>"),
-                 HTML("<h4><a href=\"https://exrcsdrive.kaust.edu.sa/exrcsdrive/index.php/s/8ufIeDwuVgulry6\">Pre-calculated PATC Genomic trace for 
+                 HTML("<h4><a href=\"https://s3.eu-central-1.amazonaws.com/wormbuilder.dev/Downloads/PATC/Documentation.zip\">PATC algorithm documentation (Fire <i>et al</i>., 2006)</a></h4>"),
+                 HTML("<h4><a href=\"https://s3.eu-central-1.amazonaws.com/wormbuilder.dev/Downloads/PATC/Datafiles.zip\">Pre-calculated PATC Genomic trace for 
                       <i>C. elegans</i> ce11/WS245 (Frøkjær-Jensen <i>et al</i>., 2016)</a></h4>")
                  )
                  ),
@@ -314,8 +319,7 @@ shinyUI(
         )
     ),
     hr(),
-    HTML("<a href=\"https://syngenbio.kaust.edu.sa\">Syntetic genome biology laboratory</a> @ <a href=\"https://kaust.edu.sa/en\"> KAUST</a><br>"),
-    HTML("<a href=\"http://www.wormbuilder.org/\">Wormbuilder</a><br>"),
+    HTML("<a href=\"https://www.wormbuilder.org/\">Wormbuilder</a><br>"),
     HTML("<a href=\"mailto:amhed.velazquez@kaust.edu.sa\">Contact us!</a>")
     
 )
