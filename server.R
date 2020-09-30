@@ -36,7 +36,7 @@ library(Biostrings)
 
     #####Read data for functions##########################
         ###Data explorer
-        ChrisPAT=read.table("PATC/PATC_WS278_data.tsv",sep="\t", header= TRUE)
+        ChrisPAT=read.table("PATC/newPATC_WS278_data.tsv",sep="\t", header= TRUE)
         rownames(ChrisPAT)=as.character(ChrisPAT[,2])
         ##Assign Yes, No, unknown insted of TRUE, FALSE, NA
         ChrisPAT$GermlineExpression[which(!(ChrisPAT$GermlineExpression))] <- "No"
@@ -128,8 +128,10 @@ library(Biostrings)
              "Gene size: ", gene$Bin.size, "<br>",
              "Number of phased bases: ", gene$Bases.with.PATC.60, "<br>",
              "Phased bases in gene: ", as.integer(gene$Frequency.of.PATCs.60 * 100), "%<br>",
+             "Phased bases in introns: ", as.integer(gene$IntronicPhaseFreq * 100), "%<br>",
              "Total PATC score: ", gene$Total.value.of.PATC.algorithm, "<br>",
              "PATC density: ", round(gene$PATC.density,2), "<br>",
+             "Intronic PATC density: ", round(gene$IntronicPATCDensity,2), "<br>",
              "Germline expression: ", gene$GermlineExpression, "<sup>1</sup><br>",
              "RPKM Oocyte expression<sup>2</sup>: ", round(gene$stoekius_oocyte_rpkm,2), "<br>",
              "RPKM Sperm expression<sup>3</sup>: ", round(gene$spermatogenic_gonad_fem.3_RPKM_Ortiz_2014,2),"<br>","<br>",
@@ -175,7 +177,11 @@ library(Biostrings)
       yone=input$papos[1]/100
       ytwo=input$papos[2]/100
       flagscalelog=input$flascal
+      chaPATi=input$radio_PATC_data
+      
       crisp = ChrisPAT
+      
+      if(chaPATi == 2){ crisp$PATC.density = crisp$IntronicPATCDensity}
       
       if(chromos != "All"){ crisp = subset(crisp, Chromosome == chromos)}
       if(input$flascal){crisp[which(crisp[,9] > .001),9] = log(crisp[which(crisp[,9] > .001),9])}
@@ -280,46 +286,47 @@ library(Biostrings)
       
       output$table1 = DT::renderDataTable(DT::datatable({
        makett()
-      }, options = list(dom = 't')))
+      #}, options = list(dom = 't')))
+      }))
       
-      ###Add visualization 4 & 5 if checkbox
-      if(input$flag_hist2){
-        ###Read file to analyze
-        inseq=readLines(paste("PATC/users/",session_id,"/file.fasta", sep=""))
-        if(length(grep(">",inseq)) > 0) {inseq=inseq[-c(grep(">",inseq))]}
-        
-        inseq=paste(inseq,collapse="")
-        
-        bseq=DNAString(gsub(pattern="\n",replacement="",x=toupper(inseq)))
-        
-        dists=dist(start(matchPattern("WWWW",bseq, fixed=FALSE)))
-        vals=table(dists)
-        freqAT= as.integer(vals)
-        xas=as.integer(names(vals))
-        freqPAT = data.frame(BPseparation=xas[-c(1:5)], Ocurrences=freqAT[-c(1:5)])
-        
-        valu=higfft(vals)
-        if(!is.null(valu)){output$computedfft2 <- renderUI({ HTML(paste0("Highest periodicity signal found at ","<b>",valu,"bp </b>",sep=""))})}
-        
-        
-        output$plot4 <- renderPlot({
-          ggplot(freqPAT, aes(BPseparation, Ocurrences)) +
-            ggtitle("A/T spacing (click and drag to see details)") +
-            geom_line() +
-            coord_cartesian(xlim=c(0,max(freqPAT$BPseparation)), ylim=c(0,max(freqPAT$Ocurrences)),expand = FALSE)
-        })
-        
-        output$plot5 <- renderPlot({
-          ggplot(freqPAT, aes(BPseparation, Ocurrences)) +
-            ggtitle("Detailed view") +
-            geom_line() +
-            coord_cartesian(xlim = ranges2$x, ylim = ranges2$y, expand = FALSE)
-        })
-      }else{
-        output$plot4 <- renderPlot({ggplot()})
-        output$plot5 <- renderPlot({ggplot()})
-        output$computedfft2 <- renderUI({ HTML(paste0(""))})
-      }
+      # ###Add visualization 4 & 5 if checkbox
+      # if(input$flag_hist2){
+      #   ###Read file to analyze
+      #   inseq=readLines(paste("PATC/users/",session_id,"/file.fasta", sep=""))
+      #   if(length(grep(">",inseq)) > 0) {inseq=inseq[-c(grep(">",inseq))]}
+      #   
+      #   inseq=paste(inseq,collapse="")
+      #   
+      #   bseq=DNAString(gsub(pattern="\n",replacement="",x=toupper(inseq)))
+      #   
+      #   dists=dist(start(matchPattern("WWWW",bseq, fixed=FALSE)))
+      #   vals=table(dists)
+      #   freqAT= as.integer(vals)
+      #   xas=as.integer(names(vals))
+      #   freqPAT = data.frame(BPseparation=xas[-c(1:5)], Ocurrences=freqAT[-c(1:5)])
+      #   
+      #   valu=higfft(vals)
+      #   if(!is.null(valu)){output$computedfft2 <- renderUI({ HTML(paste0("Highest periodicity signal found at ","<b>",valu,"bp </b>",sep=""))})}
+      #   
+      #   
+      #   output$plot4 <- renderPlot({
+      #     ggplot(freqPAT, aes(BPseparation, Ocurrences)) +
+      #       ggtitle("A/T spacing (click and drag to see details)") +
+      #       geom_line() +
+      #       coord_cartesian(xlim=c(0,max(freqPAT$BPseparation)), ylim=c(0,max(freqPAT$Ocurrences)),expand = FALSE)
+      #   })
+      #   
+      #   output$plot5 <- renderPlot({
+      #     ggplot(freqPAT, aes(BPseparation, Ocurrences)) +
+      #       ggtitle("Detailed view") +
+      #       geom_line() +
+      #       coord_cartesian(xlim = ranges2$x, ylim = ranges2$y, expand = FALSE)
+      #   })
+      # }else{
+      #   output$plot4 <- renderPlot({ggplot()})
+      #   output$plot5 <- renderPlot({ggplot()})
+      #   output$computedfft2 <- renderUI({ HTML(paste0(""))})
+      # }
     })
     
     ###############Observer DemoSeq button

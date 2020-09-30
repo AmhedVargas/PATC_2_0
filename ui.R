@@ -150,25 +150,25 @@ shinyUI(
                                         #custom slide
                                         tags$div(class = "js-irs-none", sliderInput("thres", HTML("Phasing threshold<sup>1</sup>"), value = 60, min = 5, max = 95, step = 5)),
                                         checkboxInput("flabal2",HTML("<b>Balanced algorithm<sup>2</sup></b>"), value=TRUE),
-                                        checkboxInput("flag_hist2",HTML("<b>Analyze PATC periodicity<sup>3</sup></b>"), value=TRUE),
+                                        #checkboxInput("flag_hist2",HTML("<b>Analyze PATC periodicity<sup>3</sup></b>"), value=TRUE),
                                         ##Download demo trhough handler
                                         downloadButton("downloadData", "Demo File"),
                                         actionButton("action1", label = "Calculate PATCs")
                                             )),
-                                        fluidRow(
-                                          column(width = 8,
-                                                 plotOutput("plot4", height = 300,
-                                                            brush = brushOpts(
-                                                              id = "plot2_brush",
-                                                              direction=c("x"),
-                                                              resetOnNew = TRUE
-                                                            )
-                                                 )
-                                          ),
-                                          column(width = 4,
-                                                 plotOutput("plot5", height = 300)
-                                          )),
-                                          htmlOutput("computedfft2"),
+                                        # fluidRow(
+                                        #   column(width = 8,
+                                        #          plotOutput("plot4", height = 300,
+                                        #                     brush = brushOpts(
+                                        #                       id = "plot2_brush",
+                                        #                       direction=c("x"),
+                                        #                       resetOnNew = TRUE
+                                        #                     )
+                                        #          )
+                                        #   ),
+                                        #   column(width = 4,
+                                        #          plotOutput("plot5", height = 300)
+                                        #   )),
+                                        #   htmlOutput("computedfft2"),
                                         hr(),
                                         HTML(
                                             "<font size=\"2\">",
@@ -177,10 +177,10 @@ shinyUI(
                                         HTML("<p align=\"justify\"><b><sup>2</sup>:</b> The balanced algorithm (Frøkjær-Jensen <i>et al</i>., 2016) substracts
                                        \"off-helical\" A<sub>n</sub>/T<sub>n</sub> signals in an effort to reduce false positive PATC signals in repeat regions and 
                                        A/T rich genomes.</p>"),
-                                        HTML("<p align=\"justify\"><b><sup>3</sup>:</b> Display histogram of frequencies between A/T<sub>4</sub> motifs and highest 
-                                        signals periodicty (for the first 20bp) calculated via a Fourier transform.</p>",
-                                             "</font>"),
-                                        HTML("<b>Please note that the results are reported in bins of 1 megabase in length. For fasta files of length greater than 1MB, consecutive windows will be reported.</b>"),
+                                        # HTML("<p align=\"justify\"><b><sup>3</sup>:</b> Display histogram of frequencies between A/T<sub>4</sub> motifs and highest 
+                                        # signals periodicty (for the first 20bp) calculated via a Fourier transform.</p>",
+                                        #      ""),
+                                        HTML("</font><b>Please note that the results are reported in bins of 1 megabase in length. For fasta files of length greater than 1MB, consecutive windows will be reported.</b>"),
                                         hr(),
                                         DT::dataTableOutput("table1") 
                                )
@@ -200,6 +200,7 @@ shinyUI(
                                              selectInput("chromo","Chromosome",c("All","I","II","III", "IV", "V", "X", "MtDNA")),
                                              sliderInput("cpos", "Relative position in chromosome (%)",0, 100, c(0, 100), step = 1),
                                              sliderInput("papos", "Display top genes ranked by PATC content (%)",0, 100, c(0, 100), step = 1),
+                                             radioButtons("radio_PATC_data","Show PATCs of", c("Genebody" = 1, "Introns" = 2), inline=TRUE),
                                              checkboxInput("flascal","Log scale Y axis", value=FALSE),
                                              textAreaInput("genetext", label = "Gene search", value = "", placeholder= "Wormbase ID or common name",resize="none",rows=1),
                                              actionButton("actionsearch", label = "Go!"),
