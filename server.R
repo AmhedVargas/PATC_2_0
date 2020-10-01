@@ -287,7 +287,12 @@ library(Biostrings)
       output$table1 = DT::renderDataTable(DT::datatable({
        makett()
       #}, options = list(dom = 't')))
-      }))
+      }, extensions = 'Buttons',
+      options = list(dom = 'Bfrtip',
+                     buttons = c('copy', 'csv', 'excel', 'pdf', 'print'))),
+      server=FALSE
+      )
+        #}))
       
       # ###Add visualization 4 & 5 if checkbox
       # if(input$flag_hist2){
