@@ -38,7 +38,7 @@ Additionally, the PATC app show a genome browser that relies on a custom modifie
 *  *    PATCsGenesChristianData.tsv `File that contains gene info as well as their PATC values. Christian Froek-jaer Jensen kindly provided the data. See his 2016 paper for more info.`
 *  *    patc.sh    `Shell script to handle Pascal code. Receives input from console within R via a "system" command`
 *  *    user folder    `Directory that contains temporary folders for each connected user; it won't be there till the code runs sucessfully at least once`
-*  *    NewPATC052115Balanced    `Unix x86 compiled Pascal script. In case of running in other operative system, the script has to be recompiled (see below)
+*  *    NewPATC052115Balanced    `Unix x86 compiled Pascal script. In case of running in other operative system, the script has to be recompiled (see below)`
 *  **source** `Only needed if running not in an Unix based system.`
 *   *   NewPATC052115Balanced.pas   `Pascal script to be compiled`
 
@@ -107,3 +107,6 @@ All the templates, libraries, and programs used to produce this site are under t
 ## The PATC algorithm
 Andrew Fire et al. (2006) developed the original PATC algorithm. This server uses a modified "balanced" PATC algorithm (Frøkjær-Jensen et al., 2016). This app acts only as a front-end for the PATC algorihtm which runs in the background. For a proper description of how it works, see Fire et al. 2006 paper.
 
+## Citation
+Aljohani, M.D., El Mouridi, S., Priyadarshini, M. et al. Engineering rules that minimize germline silencing of transgenes in simple extrachromosomal arrays in *C. elegans*. Nat Commun 11, 6300 (2020). [DOI](https://doi.org/10.1038/s41467-020-19898-0)
+[Article](https://www.nature.com/articles/s41467-020-19898-0)
