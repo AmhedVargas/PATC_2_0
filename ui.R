@@ -78,6 +78,7 @@ shinyUI(
                           border-left-color: transparent;
                           border-right-color: transparent}
                "),
+    includeHTML("www/ga.html"),
     #Call busy indicator on top of all tabs.
     busyIndicator(),
     #script to renew igv browser everytime a tab is changed. This solves issue regarding Nan positioning when browser is not in main tab.
